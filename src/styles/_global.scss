@@ -1,0 +1,28 @@
+.Global {
+
+  &.text {
+
+    &.__ct {
+      text-align: center;
+    }
+
+  }
+
+  &.br-lft {
+
+  }
+
+  &.__no-m-b {
+    margin-bottom: 2px;
+  }
+
+  &.__vertical {
+    width: 50px;
+    height: 150px;
+    margin-left: 1px;
+    margin-right: 1px;    
+    word-wrap: break-word;
+    line-height: 20px;
+  }
+
+}
