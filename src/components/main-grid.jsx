@@ -3,7 +3,6 @@ import  RoadBtn from './road-btn';
 
 export const Path = (conection, actionId) => {
   const middlePoint = { x: 0, y: 0 };
-  console.log('conection >> ', conection);
   if (!~+conection.y && !~+conection.x) {
     middlePoint.x = Math.max(conection.to.left, conection.from.left);
     middlePoint.y = Math.min(conection.to.top, conection.from.top);
@@ -14,11 +13,12 @@ export const Path = (conection, actionId) => {
     middlePoint.x = Math.max(conection.to.left, conection.from.left);
     middlePoint.y = Math.max(conection.to.top, conection.from.top);
   }
+  const q = !conection.y || !conection.x ? '' : ' Q' + middlePoint.x +','+ middlePoint.y;
   return (<path
        key={actionId}
       style={{stroke:'rgb(255,0,0)', strokeWdth: 2, fill: 'none'}}
       d={'M' +conection.from.left +','+ conection.from.top + 
-      ' Q' + middlePoint.x +','+ middlePoint.y + 
+      q + 
       ' ' + conection.to.left+','+ conection.to.top }
        />)
 };
@@ -26,7 +26,6 @@ export const Path = (conection, actionId) => {
 
   let actionId = 0;
   const conections = [];
-  let initPoints = {start: {left: 0, top: 0 }, end: {left: 0, top: 0}};
   let cv = { height: 1, width: 1 };
 
  class MainGrid  extends Component {
@@ -39,9 +38,18 @@ export const Path = (conection, actionId) => {
         actionId,
         conections,
       };
+      RoadBtn.prototype.disabledNext = this.getDisableNext.bind(this);
+      RoadBtn.prototype.offsetParent = this.myRef;
    }
 
-
+   getDisableNext(id) {
+     if(this.state.conections.length) {
+     const lastIndex = this.state.conections.length - 1;
+     const lastConnection = this.state.conections[lastIndex];
+     return  id === lastConnection.from.name && this.state.onNext === 'TO_CONECTION';
+     }
+     return false;
+   }
 
    btnClick(e, prop, pos) {
     e.preventDefault();
@@ -61,9 +69,9 @@ export const Path = (conection, actionId) => {
         actionId,
         conections,
       });
-      Object.assign(initPoints, {start: {
-          top: pos.top, left: pos.left
-        }});
+      // Object.assign(initPoints, {start: {
+      //     top: pos.top, left: pos.left
+      //   }});
     } else if (this.state.onNext === 'TO_CONECTION') {
       const lastIndex = conections.length - 1;
       conections[lastIndex] = Object.assign(conections[lastIndex], {
@@ -75,9 +83,9 @@ export const Path = (conection, actionId) => {
         x: conections[lastIndex].x || prop.x,
         y: conections[lastIndex].y || prop.y
       });
-      initPoints.end = {
-        top: pos.top, left: pos.left
-      };
+      // initPoints.end = {
+      //   top: pos.top, left: pos.left
+      // };
       this.setState({
         onNext: 'FROM_CONECTION',
         actionId,
@@ -93,7 +101,7 @@ export const Path = (conection, actionId) => {
 
   render() {
     return (
-      <div class="row Global text __ct" ref={this.myRef}>
+      <div id="main-grid" class="row Global text __ct" ref={this.myRef}>
          <div class="col s12">
                    <RoadBtn id="0" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
                    <RoadBtn id="1" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
@@ -121,7 +129,7 @@ export const Path = (conection, actionId) => {
                    <RoadBtn id="14" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
                    <RoadBtn id="15" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
          </div >
-<svg height={cv.height} width={cv.width} style={{'display': initPoints.end.left ? 'block': 'none' }}>
+<svg height={cv.height} width={cv.width} style={{'display': this.state.conections.length ? 'block': 'none' }}>
       {this.state.conections.map((conection, index) => conection.to && conection.to.top ? Path(conection, index) : '' )}
 </svg>         
       </div>);
