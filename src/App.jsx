@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Manouvers  from './components/manouvers';
+import ValidInvalid  from './components/valid-invalid';
 
 class App extends Component {
   render() {
-    return (<Manouvers></Manouvers>)
+    return (<ValidInvalid></ValidInvalid>)
   }
 }
 

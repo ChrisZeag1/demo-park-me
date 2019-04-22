@@ -27,7 +27,7 @@ import React, { Component } from 'react';
          left: pos.left - mainGrid.left + pos.width/2
         };
       }
-     this.props.btnClick(e, this.props, position);
+     this.btnClick(e, this.props, position);
    }
 
    render() {

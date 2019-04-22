@@ -1,136 +1,72 @@
 import React, { Component } from 'react';
 import  RoadBtn from './road-btn';
-
-export const Path = (conection, actionId) => {
-  const middlePoint = { x: 0, y: 0 };
-  if (!~+conection.y && !~+conection.x) {
-    middlePoint.x = Math.max(conection.to.left, conection.from.left);
-    middlePoint.y = Math.min(conection.to.top, conection.from.top);
-  }else if (~+conection.y && ~+conection.x) {
-     middlePoint.x = Math.min(conection.to.left, conection.from.left);
-    middlePoint.y = Math.max(conection.to.top, conection.from.top);
-  }else {
-    middlePoint.x = Math.max(conection.to.left, conection.from.left);
-    middlePoint.y = Math.max(conection.to.top, conection.from.top);
-  }
-  const q = !conection.y || !conection.x ? '' : ' Q' + middlePoint.x +','+ middlePoint.y;
-  return (<path
-       key={actionId}
-      style={{stroke:'rgb(255,0,0)', strokeWdth: 2, fill: 'none'}}
-      d={'M' +conection.from.left +','+ conection.from.top + 
-      q + 
-      ' ' + conection.to.left+','+ conection.to.top }
-       />)
-};
-
-
-  let actionId = 0;
-  const conections = [];
-  let cv = { height: 1, width: 1 };
+import { Path } from './path';
 
  class MainGrid  extends Component {
+
    constructor(props) {
      super(props);
-     this.btnClick = this.btnClick.bind(this);
       this.myRef = React.createRef();
-      this.state = {
-        onNext: 'FROM_CONECTION',
-        actionId,
-        conections,
-      };
       RoadBtn.prototype.disabledNext = this.getDisableNext.bind(this);
       RoadBtn.prototype.offsetParent = this.myRef;
+      RoadBtn.prototype.btnClick = this.props.btnClick;
+      this.cv = { height: 0 , width: 0 };
    }
 
    getDisableNext(id) {
-     if(this.state.conections.length) {
-     const lastIndex = this.state.conections.length - 1;
-     const lastConnection = this.state.conections[lastIndex];
-     return  id === lastConnection.from.name && this.state.onNext === 'TO_CONECTION';
+     if(this.props.conections.length) {
+     const lastIndex = this.props.conections.length - 1;
+     const lastConnection = this.props.conections[lastIndex];
+     return  id === lastConnection.from.name && this.props.onNext === 'TO_CONECTION';
      }
      return false;
    }
 
-   btnClick(e, prop, pos) {
-    e.preventDefault();
-    if(this.state.onNext === 'FROM_CONECTION') {
-      actionId ++;
-      conections.push({
-        from: {
-          name: prop.id,
-          top: pos.top,
-          left: pos.left
-        },
-        x: prop.x,
-        y: prop.y,
-      });
-      this.setState({
-        onNext: 'TO_CONECTION',
-        actionId,
-        conections,
-      });
-      // Object.assign(initPoints, {start: {
-      //     top: pos.top, left: pos.left
-      //   }});
-    } else if (this.state.onNext === 'TO_CONECTION') {
-      const lastIndex = conections.length - 1;
-      conections[lastIndex] = Object.assign(conections[lastIndex], {
-        to: {
-          name: prop.id,
-          top: pos.top,
-          left: pos.left
-        },
-        x: conections[lastIndex].x || prop.x,
-        y: conections[lastIndex].y || prop.y
-      });
-      // initPoints.end = {
-      //   top: pos.top, left: pos.left
-      // };
-      this.setState({
-        onNext: 'FROM_CONECTION',
-        actionId,
-        conections,
-      });
-    }
-    console.log('this state', this.state);
-    cv = {
-      width: this.myRef.current.clientWidth,
-      height: this.myRef.current.clientHeight
-    };
+   getSize() {
+      const current = this.myRef.current.getBoundingClientRect();
+      this.cv = {
+        width: current.width,
+        height: current.height
+      };
    }
+
+    componentDidUpdate() {
+      this.getSize();
+      console.log('updating >>>')
+    }
 
   render() {
     return (
       <div id="main-grid" class="row Global text __ct" ref={this.myRef}>
          <div class="col s12">
-                   <RoadBtn id="0" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
-                   <RoadBtn id="1" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
-                   <RoadBtn id="2" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="1"></RoadBtn>
-                   <RoadBtn id="3" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="1"></RoadBtn>
+                   <RoadBtn id="0" block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
+                   <RoadBtn id="1" block="__vertical" direction="arrow_downward" y="1"></RoadBtn>
+                   <RoadBtn id="2" block="__vertical" direction="arrow_upward" y="1"></RoadBtn>
+                   <RoadBtn id="3" block="__vertical" direction="arrow_upward" y="1"></RoadBtn>
          </div >
 
         <div class="col s4">
-           <div class="row Global __no-m-b"><RoadBtn id="4" btnClick={this.btnClick} block="" direction="arrow_back" x="-1"></RoadBtn></div>
-           <div class="row Global __no-m-b"><RoadBtn id="5" btnClick={this.btnClick} block="" direction="arrow_back" x="-1"></RoadBtn></div>
-           <div class="row Global __no-m-b"><RoadBtn id="6" btnClick={this.btnClick} block="" direction="arrow_forward" x="-1"></RoadBtn></div> 
-           <div class="row Global __no-m-b"><RoadBtn id="7" btnClick={this.btnClick} block="" direction="arrow_forward"  x="-1"></RoadBtn></div> 
+           <div class="row Global __no-m-b"><RoadBtn id="4" block="" direction="arrow_back" x="-1"></RoadBtn></div>
+           <div class="row Global __no-m-b"><RoadBtn id="5" block="" direction="arrow_back" x="-1"></RoadBtn></div>
+           <div class="row Global __no-m-b"><RoadBtn id="6" block="" direction="arrow_forward" x="-1"></RoadBtn></div> 
+           <div class="row Global __no-m-b"><RoadBtn id="7" block="" direction="arrow_forward"  x="-1"></RoadBtn></div> 
         </div>
         <div class="col s4"></div>
         <div class="col s4">
-           <div class="row Global __no-m-b"><RoadBtn id="8" btnClick={this.btnClick} block="" direction="arrow_back" x="1"></RoadBtn></div>
-           <div class="row Global __no-m-b"><RoadBtn id="9" btnClick={this.btnClick} block="" direction="arrow_back" x="1"></RoadBtn></div>
-           <div class="row Global __no-m-b"><RoadBtn id="10" btnClick={this.btnClick} block="" direction="arrow_forward" x="1"></RoadBtn></div> 
-           <div class="row Global __no-m-b"><RoadBtn id="11" btnClick={this.btnClick} block="" direction="arrow_forward" x="1"></RoadBtn></div> 
+           <div class="row Global __no-m-b"><RoadBtn id="8" block="" direction="arrow_back" x="1"></RoadBtn></div>
+           <div class="row Global __no-m-b"><RoadBtn id="9" block="" direction="arrow_back" x="1"></RoadBtn></div>
+           <div class="row Global __no-m-b"><RoadBtn id="10" block="" direction="arrow_forward" x="1"></RoadBtn></div> 
+           <div class="row Global __no-m-b"><RoadBtn id="11" block="" direction="arrow_forward" x="1"></RoadBtn></div> 
         </div>
 
          <div class="col s12">
-                   <RoadBtn id="12" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="-1"></RoadBtn>
-                   <RoadBtn id="13" btnClick={this.btnClick} block="__vertical" direction="arrow_downward" y="-1"></RoadBtn>
-                   <RoadBtn id="14" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
-                   <RoadBtn id="15" btnClick={this.btnClick} block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
-         </div >
-<svg height={cv.height} width={cv.width} style={{'display': this.state.conections.length ? 'block': 'none' }}>
-      {this.state.conections.map((conection, index) => conection.to && conection.to.top ? Path(conection, index) : '' )}
+                   <RoadBtn id="12" block="__vertical" direction="arrow_downward" y="-1"></RoadBtn>
+                   <RoadBtn id="13" block="__vertical" direction="arrow_downward" y="-1"></RoadBtn>
+                   <RoadBtn id="14" block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
+                   <RoadBtn id="15" block="__vertical" direction="arrow_upward" y="-1"></RoadBtn>
+         </div>
+<svg height={this.cv.height} width={this.cv.width} style={{'display': this.props.conections.length ? 'block': 'none' }}>
+      {this.props.conections.map((conection, index) => conection.to && conection.to.top ? Path(conection, index, null, this.props.onSelect) : '' )}
 </svg>         
       </div>);
   }
