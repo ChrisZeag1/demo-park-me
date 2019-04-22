@@ -148,7 +148,7 @@ class Manouvers  extends Component {
   render() {  
     return (<div>
       <h1 class="Global text __ct">Select all the {this.state.on} maneuvers</h1>
-      <h6  class="row Global text __ct">connect the button to create a {this.state.on} maneuver</h6>
+      <h6  class="row Global text __ct">connect the buttons to create a maneuver</h6>
       <MainGrid btnClick={this.btnClick.bind(this)} {...this.state} onSelect={this.selectManouver.bind(this)}></MainGrid>
 
       <h4 style={{display:  this.getDisplayedIfcon() }}>Your manouvers </h4>
