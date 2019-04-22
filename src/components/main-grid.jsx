@@ -32,7 +32,6 @@ import { Path } from './path';
 
     componentDidUpdate() {
       this.getSize();
-      console.log('updating >>>')
     }
 
   render() {

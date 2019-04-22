@@ -1,5 +1,17 @@
+$submit-color: #4392ca;
+
 button {
   &.__with-2 {
     width: 150px;
+  }
+
+  &.__submit {
+    background-color: $submit-color;
+    &:hover {
+      background-color: $submit-color;
+    }
+    &:focus {
+      background-color: $submit-color;
+    }
   }
 }
