@@ -2,7 +2,7 @@ import React  from 'react';
 
 export const Path = (conection, actionId, strokeWidth,onSelect) => {
   strokeWidth = strokeWidth || 4;
-  const bgColor = conection.selected ? 'rgb(255,0,0)' : 'rgb(0,0,0)';
+  const bgColor = conection.selected ? 'rgb(255,0,0)' : 'rgb(255,255,255)';
   const middlePoint = { x: 0, y: 0 };
   if (!~+conection.y && !~+conection.x) {
     middlePoint.x = Math.max(conection.to.left, conection.from.left);

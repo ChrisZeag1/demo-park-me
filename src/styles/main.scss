@@ -80,3 +80,14 @@ svg {
     stroke-dashoffset: 0;
   }
 }
+#main-grid {
+  background-image: url('../assets/intersection.png');
+  background-size: contain;
+  background-repeat: no-repeat;  
+}
+
+.manouver-container .manouver {
+  background-image: url('../assets/intersection-buttons.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
